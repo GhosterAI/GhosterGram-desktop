@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of Telegram Desktop,
 the official desktop application for the Telegram messaging service.
 
@@ -43,6 +43,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "main/main_domain.h"
 #include "main/main_session.h"
 #include "main/main_session_settings.h"
+#include "ghostergram/ghoster_settings.h"
 #include "settings/settings_builder.h"
 #include "settings/cloud_password/settings_cloud_password_input.h"
 #include "settings/sections/settings_advanced.h"
@@ -384,6 +385,13 @@ void BuildSectionButtons(SectionBuilder &builder) {
 		.targetSection = PrivacySecurityId(),
 		.icon = { &st::menuIconLock },
 		.keywords = { u"security"_q, u"passcode"_q, u"password"_q, u"2fa"_q },
+	});
+
+	builder.addSectionButton({
+		.title = rpl::single(ghostergram::SettingsSectionTitle()),
+		.targetSection = ghostergram::SettingsSectionId(),
+		.icon = { &st::menuIconAntispam },
+		.keywords = { u"ghostergram"_q, u"pin"_q, u"night"_q, u"silent"_q },
 	});
 
 	builder.addSectionButton({

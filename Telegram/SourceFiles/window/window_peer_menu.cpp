@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of Telegram Desktop,
 the official desktop application for the Telegram messaging service.
 
@@ -65,6 +65,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "main/main_session_settings.h"
 #include "menu/menu_mute.h"
 #include "menu/menu_ttl_validator.h"
+#include "ghostergram/ghoster_autodelete.h"
+#include "ghostergram/ghoster_erase.h"
+#include "ghostergram/ghoster_read_status.h"
 #include "apiwrap.h"
 #include "mainwidget.h"
 #include "api/api_blocked_peers.h"
@@ -317,6 +320,9 @@ private:
 	void addCreatePoll();
 	void addCreateTodoList();
 	void addThemeEdit();
+	void addGhosterAutoDelete();
+	void addGhosterReadStatus();
+	void addGhosterEraseEvidence();
 	void addToggleNoForwards();
 	void addBlockUser();
 	void addViewDiscussion();
@@ -1516,6 +1522,51 @@ void ShowDisableSharingBox(
 	}));
 }
 
+void Filler::addGhosterAutoDelete() {
+	if (!_peer || _peer->isSelf()) {
+		return;
+	}
+	const auto peer = _peer;
+	if (!ghostergram::Enabled(&peer->session())) {
+		return;
+	}
+	const auto applies = ghostergram::AppliesTo(peer);
+	_addAction(ghostergram::PeerMenuText(peer), [=] {
+		// An explicit choice always wins over the automatic default, so the
+		// rule is stored instead of just flipping a flag: otherwise gaining or
+		// losing admin rights would silently change what the user picked.
+		ghostergram::SetRuleFor(
+			peer,
+			applies ? ghostergram::PeerRule::Never : ghostergram::PeerRule::Always);
+	}, (applies ? &st::menuIconCancel : &st::menuIconClear));
+}
+
+void Filler::addGhosterReadStatus() {
+	if (!_peer || !ghostergram::ReadStatusHiddenFor(_peer)) {
+		return;
+	}
+	const auto peer = _peer;
+	const auto show = _controller->uiShow();
+	_addAction(ghostergram::ReadStatusTitle(), [=] {
+		show->showBox(Box([=](not_null<Ui::GenericBox*> box) {
+			ghostergram::ReadStatusBox(box, peer);
+		}));
+	}, &st::menuIconMarkRead);
+}
+
+void Filler::addGhosterEraseEvidence() {
+	if (!_peer) {
+		return;
+	}
+	const auto peer = _peer;
+	const auto show = _controller->uiShow();
+	_addAction(ghostergram::EraseMenuText(), [=] {
+		show->showBox(Box([=](not_null<Ui::GenericBox*> box) {
+			ghostergram::EraseEvidenceBox(box, show, peer);
+		}));
+	}, &st::menuIconDelete);
+}
+
 void Filler::addToggleNoForwards() {
 	const auto user = _peer->asUser();
 	if (!user
@@ -1877,6 +1928,9 @@ void Filler::fillHistoryActions() {
 	addCreatePoll();
 	addCreateTodoList();
 	addThemeEdit();
+	addGhosterAutoDelete();
+	addGhosterReadStatus();
+	addGhosterEraseEvidence();
 	addToggleNoForwards();
 	addViewDiscussion();
 	addDirectMessages();

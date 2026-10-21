@@ -1,4 +1,4 @@
-# This file is part of Telegram Desktop,
+﻿# This file is part of Telegram Desktop,
 # the official desktop application for the Telegram messaging service.
 #
 # For license and copyright information please follow this link:
@@ -1573,6 +1573,28 @@ PRIVATE
     mtproto/special_config_request.cpp
     mtproto/special_config_request.h
     mtproto/type_utils.h
+
+    ghostergram/ghoster_autodelete.cpp
+    ghostergram/ghoster_autodelete.h
+    ghostergram/ghoster_branding.cpp
+    ghostergram/ghoster_branding.h
+    ghostergram/ghoster_erase.cpp
+    ghostergram/ghoster_erase.h
+    ghostergram/ghoster_read_status.cpp
+    ghostergram/ghoster_read_status.h
+    ghostergram/ghoster_keypad.cpp
+    ghostergram/ghoster_keypad.h
+    ghostergram/ghoster_night_silent.cpp
+    ghostergram/ghoster_night_silent.h
+    ghostergram/ghoster_pin.cpp
+    ghostergram/ghoster_pin.h
+    ghostergram/ghoster_pin_box.cpp
+    ghostergram/ghoster_pin_box.h
+    ghostergram/ghoster_screen_guard.cpp
+    ghostergram/ghoster_screen_guard.h
+    ghostergram/ghoster_settings.cpp
+    ghostergram/ghoster_settings.h
+
     overview/overview_checkbox.cpp
     overview/overview_checkbox.h
     overview/overview_layout.cpp
@@ -2277,10 +2299,10 @@ else()
     if (CMAKE_GENERATOR STREQUAL Xcode)
         set(bundle_identifier "com.tdesktop.Telegram$<$<CONFIG:Debug>:Debug>")
     else()
-        set(bundle_identifier "com.tdesktop.Telegram")
+        set(bundle_identifier "com.brent.ghostergram")
     endif()
     set(bundle_entitlements "Telegram.entitlements")
-    set(output_name "Telegram")
+    set(output_name "ghostergram")
 endif()
 
 if (CMAKE_GENERATOR STREQUAL Xcode)

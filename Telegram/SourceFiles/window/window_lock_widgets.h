@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of Telegram Desktop,
 the official desktop application for the Telegram messaging service.
 
@@ -19,6 +19,7 @@ enum class SystemUnlockResult;
 
 namespace Ui {
 class PasswordInput;
+class FlatLabel;
 class LinkButton;
 class RoundButton;
 class CheckView;
@@ -27,6 +28,10 @@ class CheckView;
 namespace Main {
 class Session;
 } // namespace Main
+
+namespace ghostergram {
+class PinKeypad;
+} // namespace ghostergram
 
 namespace Window {
 
@@ -78,6 +83,8 @@ private:
 	void setupSystemUnlock();
 	void suggestSystemUnlock();
 	void systemUnlockDone(base::SystemUnlockResult result);
+	void setupGhosterPinMode();
+	void refreshGhosterLockout();
 	void changed();
 	void submit();
 	void error();
@@ -91,6 +98,11 @@ private:
 
 	rpl::lifetime _systemUnlockSuggested;
 	base::Timer _systemUnlockCooldown;
+
+	Ui::FlatLabel *_ghosterHint = nullptr;
+	ghostergram::PinKeypad *_ghosterKeypad = nullptr;
+	base::Timer _ghosterLockoutTimer;
+	bool _ghosterPinMode = false;
 
 };
 

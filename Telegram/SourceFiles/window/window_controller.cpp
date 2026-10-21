@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of Telegram Desktop,
 the official desktop application for the Telegram messaging service.
 
@@ -16,6 +16,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "main/main_account.h"
 #include "main/main_domain.h"
 #include "main/main_session.h"
+#include "ghostergram/ghoster_pin_box.h"
 #include "main/main_session_settings.h"
 #include "main/main_app_config.h"
 #include "media/view/media_view_open_common.h"
@@ -193,6 +194,9 @@ void Controller::showAccount(
 		if (session) {
 			setupSideBar();
 			setupMain(singlePeerShowAtMsgId, std::move(oldContentCache));
+			if (isPrimary()) {
+				ghostergram::SuggestPinSetup(_sessionController.get());
+			}
 
 			session->updates().isIdleValue(
 			) | rpl::filter([=](bool idle) {
